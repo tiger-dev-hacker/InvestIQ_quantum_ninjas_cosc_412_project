@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
-
+import { Toaster } from "@/components/ui/sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,6 +35,7 @@ export default function RootLayout({
         {/* Page content */}
         <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6">
           {children}
+          <Toaster />
         </main>
       </body>
     </html>
