@@ -28,7 +28,7 @@ app.use("/transactions", txRoutes);
 
 (async () => {
   await mongoose.connect(process.env.MONGO_URL);
-  console.log("✅ Mongo connected");
+  console.log(" Mongo connected");
   const port = process.env.PORT || 3001;
-  app.listen(port, () => console.log(`✅ API running on :${port}`));
+  app.listen(port, () => console.log(` API running on :${port}`));
 })();

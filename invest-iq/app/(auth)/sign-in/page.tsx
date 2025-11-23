@@ -7,6 +7,8 @@ import FooterLink from '@/components/forms/FooterLink';
 import { signInWithEmail } from '@/lib/actions/auth.actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import Link from "next/link";
+import Image from "next/image";
 const SignIn = () => {
     const router = useRouter();
     const {
@@ -37,14 +39,19 @@ const SignIn = () => {
             }
         }
     return (
-        <>
-            <h1 className="form-title">Welcome back</h1>
+        <div>
+               
+            <Link href="/" className="auth-logo ">
+                <Image src="/assets/icons/logo.svg" alt = "Invest-IQ Logo" width = {300} height = {100} className="h-10 ml-100" />
+            </Link>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 ml-65 p-10 h-80 w-150">
+                <h1 className="form-title flex align-items-center ml-35 ">Welcome back</h1>
+
                 <InputField
                     name="email"
                     label="Email"
-                    placeholder="contact@jsmastery.com"
+                    placeholder="contact@investiq.com"
                     register={register}
                     error={errors.email}
                     validation={{ required: 'Email is required', pattern: /^\w+@\w+\.\w+$/ }}
@@ -60,13 +67,14 @@ const SignIn = () => {
                     validation={{ required: 'Password is required', minLength: 8 }}
                 />
 
-                <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
+                <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5 w-40 flex items-center justify-center ml-45 p-5">
                     {isSubmitting ? 'Signing In' : 'Sign In'}
                 </Button>
-
-                <FooterLink text="Don't have an account?" linkText="Create an account" href="/sign-up" />
+<div className="">
+                <FooterLink text="Don't have an account?" linkText="Create an account" href="/sign-up"  />
+                </div>
             </form>
-        </>
+        </div>
     );
 };
 export default SignIn;

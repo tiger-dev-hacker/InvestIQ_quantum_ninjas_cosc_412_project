@@ -35,13 +35,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Predictions / chart placeholder */}
-      <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-4 h-64">
-        <p className="text-sm text-neutral-400">
-          Prediction chart placeholder – this is where Suril&apos;s model outputs
-          (historical vs predicted values) will render.
-        </p>
-      </div>
+   
     </section>
   );
 }

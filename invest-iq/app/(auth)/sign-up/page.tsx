@@ -8,6 +8,8 @@ import FooterLink from "@/components/forms/FooterLink";
 import { signUpWithEmail } from "@/lib/actions/auth.actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
+import Image from "next/image";
 const SignUp = () => {
     const router = useRouter(); 
     const {
@@ -36,6 +38,7 @@ const SignUp = () => {
             const result = await signUpWithEmail(data); 
 
             if(result.success) router.push('/');  
+            
 
         }
         catch (e){
@@ -46,9 +49,14 @@ const SignUp = () => {
         }
     }
     return (
-        <> 
-        <h1 className="form-title"> Sign Up & Personalize </h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <div> 
+            <Link href="/" className="auth-logo ">
+                <Image src="/assets/icons/logo.svg" alt = "Invest-IQ Logo" width = {250} height = {50} className="h-10 ml-110" />
+            </Link>
+            <h1 className="form-title ml-95 mt-3"> Sign Up & Personalize </h1>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 grid grid-cols-2 gap-x-50 ml-10">
+
             <InputField 
                 name="fullName"
                 label = "Full Name"
@@ -80,7 +88,7 @@ const SignUp = () => {
 
             {/**Country */}
 
-            <SelectField
+        <SelectField
             name="investmentGoals"
             label="Investment Goals"
             placeholder="Select your investment goals"
@@ -109,13 +117,15 @@ const SignUp = () => {
             error = {errors.preferredIndustry}
             required
             />
-            <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
+          <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-3 w-80 ml-95">
                 {isSubmitting ? 'Creating Account' : 'Start you investing Journey'}
             </Button>
-
-            <FooterLink  text="Already have an account" linkText="Sign in" href="/sign-in"/>
         </form>
-         </>
+           
+            <div className="ml-10">
+                <FooterLink text="Already have an account?" linkText="Sign in" href="/sign-in" />
+            </div>
+         </div>
     )
 }
 
