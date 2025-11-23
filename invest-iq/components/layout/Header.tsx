@@ -15,7 +15,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 border-b border-neutral-800 bg-black/70 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         {/* Brand */}
-        <Link href="/dashboard" className="flex items-baseline gap-2">
+        <Link href="/" className="flex items-baseline gap-2">
           <span className="text-lg font-semibold tracking-tight text-white">
             InvestIQ
           </span>
@@ -45,9 +45,6 @@ export default function Header() {
           })}
 
           {/* Auth placeholder */}
-          <button className="rounded-full border border-neutral-700 px-3 py-1 text-xs font-medium text-neutral-300 hover:border-emerald-400 hover:text-emerald-300">
-            Sign in
-          </button>
         </nav>
       </div>
     </header>
