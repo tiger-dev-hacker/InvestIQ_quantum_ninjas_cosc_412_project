@@ -41,3 +41,37 @@ try {
         return { success: false, error: 'Delete failed' }; // Also fixed typo
     }
 };
+
+export const updateUserProfile = async (data: {
+    name?: string;
+}) => {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers() // Import headers from 'next/headers'
+        });
+
+        if (!session) {
+            return {
+                success: false,
+                error: 'Not authenticated'
+            };
+        }
+
+        const result = await auth.api.updateUser({
+            body: data,
+            headers: await headers() // Pass the headers with session
+        });
+
+        return {
+            success: true,
+            data: result,
+            message: 'Profile updated successfully'
+        };
+    } catch (e) {
+        console.error('Error updating user profile:', e);
+        return {
+            success: false,
+            error: e instanceof Error ? e.message : 'An unexpected error occurred'
+        };
+    }
+};
