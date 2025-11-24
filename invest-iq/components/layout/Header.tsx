@@ -19,7 +19,7 @@ export default function Header() {
           <span className="text-lg font-semibold tracking-tight text-white">
             InvestIQ
           </span>
-          <span className="text-xs font-medium uppercase tracking-[0.16em] text-emerald-400">
+          <span className="text-xs font-medium uppercase tracking-[0.16em] text-amber-400">
             Quantum Ninjas
           </span>
         </Link>
@@ -36,8 +36,8 @@ export default function Header() {
                 className={
                   "transition-colors " +
                   (active
-                    ? "text-emerald-400"
-                    : "text-neutral-400 hover:text-emerald-300")
+                    ? "text-amber-400"
+                    : "text-neutral-400 hover:text-amber-300")
                 }
               >
                 {link.label}
