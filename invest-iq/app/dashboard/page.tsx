@@ -1,4 +1,57 @@
+'use client';
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import InputField from "@/components/forms/InputField";
+import { getWatchlistWithData } from '@/lib/actions/watchlist.actions';
+
+// Define the type for watchlist items
+type WatchlistStock = {
+    symbol: string;
+    companyName?: string;
+    name?: string;
+    price?: number;
+    currentPrice?: number;
+};
+
 export default function DashboardPage() {
+    const { register, watch } = useForm();
+    const [watchlist, setWatchlist] = useState<WatchlistStock[]>([]);
+    const [loading, setLoading] = useState(true);
+    
+    const moneyValue = watch('moneyAmount') || 0;
+    
+    useEffect(() => {
+        async function fetchWatchlist() {
+            try {
+                setLoading(true);
+                const data = await getWatchlistWithData();
+                setWatchlist(data);
+            } catch (error) {
+                console.error('Error fetching watchlist:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        fetchWatchlist();
+    }, []);
+
+    const calculateShares = () => {
+        if (!moneyValue || watchlist.length === 0) return [];
+        
+        const moneyPerStock = parseFloat(moneyValue) / watchlist.length;
+        
+        return watchlist.map((stock) => ({
+            symbol: stock.symbol,
+            companyName: stock.companyName || stock.name,
+            price: stock.price || stock.currentPrice || 0,
+            allocatedMoney: moneyPerStock,
+            shares: Math.floor(moneyPerStock / (stock.price || stock.currentPrice || 1))
+        }));
+    };
+
+    const sharesCalculation = calculateShares();
+
   return (
     <section
       className="
@@ -11,6 +64,7 @@ export default function DashboardPage() {
         shadow-xl shadow-black/40
       "
     >
+      
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold text-white">My Dashboard</h1>
         <p className="text-sm text-slate-400">
@@ -42,17 +96,66 @@ export default function DashboardPage() {
           </p>
           <p className="mt-2 text-xl font-semibold text-white">Moderate</p>
           <p className="text-xs text-slate-400">
-            Will connect to real model later
+            Based on your portfolio diversification
           </p>
         </div>
       </div>
 
-      {/* Predictions / chart placeholder */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-4 h-64">
-        <p className="text-sm text-slate-400">
-          Prediction chart placeholder –.
-        </p>
+      {/* Money Input */}
+      <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">Quant strategy (Equal-weights) recommender</h3>
+        <div className="max-w-md">
+          <InputField 
+            name="moneyAmount"
+            label="Total Investment Amount ($)"
+            placeholder="10000"
+            register={register}
+            type="number"
+          />
+        </div>
       </div>
+
+      {/* Shares Calculation Results */}
+      {loading ? (
+        <p className="text-slate-400">Loading watchlist...</p>
+      ) : watchlist.length > 0 && moneyValue > 0 ? (
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6">
+          <h3 className="text-lg font-semibold text-white mb-4">
+            Recommended Share Distribution
+          </h3>
+          <p className="text-sm text-slate-400 mb-4">
+            Splitting ${parseFloat(moneyValue).toLocaleString()} equally across {watchlist.length} stocks
+          </p>
+          
+          <div className="space-y-3">
+            {sharesCalculation.map((item) => (
+              <div 
+                key={item.symbol}
+                className="flex items-center justify-between p-4 rounded-lg bg-slate-900/50 border border-slate-800"
+              >
+                <div>
+                  <p className="font-semibold text-white">{item.symbol}</p>
+                  <p className="text-sm text-slate-400">{item.companyName}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-white font-semibold">{item.shares} shares</p>
+                  <p className="text-sm text-slate-400">
+                    @ ${item.price.toFixed(2)} = ${(item.shares * item.price).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6">
+          <p className="text-slate-400">
+            {watchlist.length === 0 
+              ? "Add stocks to your watchlist to see calculations" 
+              : "Enter an investment amount to calculate share distribution"}
+          </p>
+        </div>
+      )}
     </section>
   );
 }
