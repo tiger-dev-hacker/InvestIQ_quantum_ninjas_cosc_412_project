@@ -1,5 +1,6 @@
 'use server';
 import {auth} from "@/lib/better-auth/auth";
+import { email } from "better-auth";
 import {headers} from "next/headers";
 export const signUpWithEmail = async ({ email, password, fullName, country, investmentGoals, riskTolerance, preferredIndustry }: SignUpFormData) => {
     try {
@@ -30,3 +31,13 @@ export const signOut = async () => {
         return { success: false, error: 'Sign out failed' }
     }
 }
+
+export const deleteUserProfile = async ({  password }: {password: string}) => {
+try {
+        await auth.api.deleteUser({ body: {password}, headers: await headers()});
+        return { success: true, message: 'User deleted successfully' }; // ADD THIS
+    } catch (e) {
+        console.log('Delete failed', e);
+        return { success: false, error: 'Delete failed' }; // Also fixed typo
+    }
+};
