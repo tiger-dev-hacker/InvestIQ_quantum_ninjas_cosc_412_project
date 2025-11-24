@@ -9,8 +9,14 @@ router.post("/", authGuard, async (req, res) => {
   if (!symbol || !["buy","sell"].includes(side) || !(qty > 0) || !(price >= 0))
     return res.status(400).json({ error: "Invalid input" });
 
-  await Transaction.create({ userId: req.session.user._id, symbol, side, qty, price });
-  res.status(201).json({ ok: true });
+  const newTx = await Transaction.create({ 
+    userId: req.session.user._id, 
+    symbol, 
+    side, 
+    qty, 
+    price 
+  });
+  res.status(201).json(newTx); // Changed from { ok: true }
 });
 
 // read
