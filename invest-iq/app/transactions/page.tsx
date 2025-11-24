@@ -1,65 +1,99 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Transaction = {
-  id: number;
+  _id: string;
+  userid: number;
   symbol: string;
   side: "BUY" | "SELL";
-  quantity: number;
+  qty: number;
   price: number;
   createdAt: string;
 };
 
 export default function TransactionsPage() {
+  useEffect(() => {
+  async function fetchTransactions() {
+    try {
+      const response = await fetch("/api/transactions", {
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch transactions");
+      }
+
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error("Error loading transactions:", error);
+    }
+  }
+
+  fetchTransactions();
+}, []);
+
   const [symbol, setSymbol] = useState("");
   const [side, setSide] = useState<"BUY" | "SELL">("BUY");
   const [quantity, setQuantity] = useState("");
   const [price, setPrice] = useState("");
   const [message, setMessage] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([
-    {
-      id: 1,
-      symbol: "AAPL",
-      side: "BUY",
-      quantity: 10,
-      price: 150,
-      createdAt: "2025-01-01 10:00",
-    },
   ]);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
 
-    if (!symbol || !quantity || !price) {
-      setMessage("Please fill in all fields.");
-      return;
+  if (!symbol || !quantity || !price) {
+    setMessage("Please fill in all fields.");
+    return;
+  }
+
+  const qtyNum = Number(quantity);
+  const priceNum = Number(price);
+
+  if (isNaN(qtyNum) || isNaN(priceNum)) {
+    setMessage("Quantity and price must be numbers.");
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/transactions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        symbol: symbol.toUpperCase(),
+        side,
+        qty: qtyNum,
+        price: priceNum,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to add transaction');
     }
 
-    const qtyNum = Number(quantity);
-    const priceNum = Number(price);
-
-    if (isNaN(qtyNum) || isNaN(priceNum)) {
-      setMessage("Quantity and price must be numbers.");
-      return;
-    }
-
-    const newTx: Transaction = {
-      id: Date.now(),
-      symbol: symbol.toUpperCase(),
-      side,
-      quantity: qtyNum,
-      price: priceNum,
-      createdAt: new Date().toLocaleString(),
-    };
-
-    // mock-only for now; Braydon will swap this for a real POST later
-    setTransactions((prev) => [newTx, ...prev]);
-    setMessage("Transaction added (mock only, not yet saved to DB).");
+    const savedTransaction = await response.json();
+    
+    // Update local state with the saved transaction from backend
+    setTransactions((prev) => [savedTransaction, ...prev]);
+    
+    // Clear form fields
     setSymbol("");
     setQuantity("");
     setPrice("");
+    setMessage("Transaction added successfully!");
+  } catch (error) {
+    console.error('Error adding transaction:', error);
+    const message = error instanceof Error ? error.message : 'Failed to add transaction';
+    setMessage(message);
   }
+}
 
   return (
     <section className="space-y-6">
@@ -156,7 +190,7 @@ export default function TransactionsPage() {
             </thead>
             <tbody>
               {transactions.map((tx) => (
-                <tr key={tx.id} className="border-b border-neutral-900">
+                <tr key={tx._id} className="border-b border-neutral-900">
                   <td className="py-2 pr-4 text-neutral-500">
                     {tx.createdAt}
                   </td>
@@ -171,7 +205,7 @@ export default function TransactionsPage() {
                   >
                     {tx.side}
                   </td>
-                  <td className="py-2 pr-4">{tx.quantity}</td>
+                  <td className="py-2 pr-4">{tx.qty}</td>
                   <td className="py-2 pr-4">${tx.price}</td>
                 </tr>
               ))}

@@ -28,4 +28,11 @@ router.post("/logout", (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
 
+router.get("/me", (req, res) => {
+  console.log('Session check:', req.session); // Debug
+  if (!req.session?.user) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+  res.json({ user: req.session.user });
+});
 module.exports = router;
