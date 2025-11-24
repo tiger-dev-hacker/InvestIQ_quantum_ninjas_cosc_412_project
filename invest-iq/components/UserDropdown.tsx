@@ -14,14 +14,18 @@ import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {LogOut} from "lucide-react";
 import NavItems from "@/components/NavItems";
-import {signOut, deleteUserProfile} from "@/lib/actions/auth.actions";
+import {signOut, deleteUserProfile, updateUserProfile} from "@/lib/actions/auth.actions";
 
 
 const UserDropdown = ({ user, initialStocks }: {user: User, initialStocks: StockWithWatchlistStatus[]}) => {
     const router = useRouter();
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showUpdateModal, setShowUpdateModal] = useState(false); 
     const [password, setPassword] = useState('');
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false); 
+    const [updateData, setUpdateData] = useState({ name: user.name }); // Add this
+
     const handleSignOut = async () => {
         await signOut();
         router.push("/sign-in");
@@ -48,6 +52,24 @@ const handleConfirmDelete = async () => {
         alert(result?.error || 'Delete failed');
         setIsDeleting(false);
     }
+};
+const handleUpdate = async() => {
+    setShowUpdateModal(true);
+}
+
+const handleConfirmUpdate = async () => {
+    setIsUpdating(true);
+    
+    const result = await updateUserProfile(updateData);
+    
+    if (result?.success) {
+        alert('Profile updated successfully');
+        setShowUpdateModal(false);
+        router.refresh(); // Refresh to show updated data
+    } else {
+        alert(result?.error || 'Update failed');
+    }
+    setIsUpdating(false);
 };
     return (
         <>
@@ -90,7 +112,7 @@ const handleConfirmDelete = async () => {
                     Logout
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-600"/>
-                 <DropdownMenuItem onClick={handleSignOut} className="text-gray-100 text-md font-medium focus:bg-transparent focus:text-yellow-500 transition-colors cursor-pointer">
+                 <DropdownMenuItem onClick={handleUpdate} className="text-gray-100 text-md font-medium focus:bg-transparent focus:text-yellow-500 transition-colors cursor-pointer">
                     Update
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-600"/>
@@ -135,6 +157,38 @@ const handleConfirmDelete = async () => {
                         setPassword('');
                     }}
                     disabled={isDeleting}
+                    className="flex-1 border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+)}
+{showUpdateModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">
+                Update Profile
+            </h3>
+            <input
+                type="text"
+                value={updateData.name}
+                onChange={(e) => setUpdateData({...updateData, name: e.target.value})}
+                placeholder="Name"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-yellow-500"
+            />
+            <div className="flex gap-3">
+                <button
+                    onClick={handleConfirmUpdate}
+                    disabled={isUpdating}
+                    className="flex-1 bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 disabled:bg-gray-400"
+                >
+                    {isUpdating ? 'Updating...' : 'Update Profile'}
+                </button>
+                <button
+                    onClick={() => setShowUpdateModal(false)}
+                    disabled={isUpdating}
                     className="flex-1 border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50"
                 >
                     Cancel
