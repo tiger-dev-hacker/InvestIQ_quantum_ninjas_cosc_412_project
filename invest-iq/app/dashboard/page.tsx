@@ -103,11 +103,15 @@ export default function DashboardPage() {
 
       {/* Money Input */}
       <div className="rounded-2xl border border-slate-800 bg-slate-950/80 p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Quant strategy (Equal-weights) recommender</h3>
-        <div className="max-w-md">
+        <h3 className="text-lg font-semibold text-white mb-2"> Quant strategy (Equal-weights) recommender</h3>
+        <p className="text-xs text-slate-400">
+            Note: This system determines your investment recommendations by equally dividing your investment amount to invest into each stock that you have stated in your wishlist. Change your wishlist to reflect your accurate choice of stocks.
+          </p>
+        <div className="max-w-md mt-4 text-md font-semibold">
+          <p> Total Investment amount ($)</p>
           <InputField 
             name="moneyAmount"
-            label="Total Investment Amount ($)"
+            label=""
             placeholder="10000"
             register={register}
             type="number"
