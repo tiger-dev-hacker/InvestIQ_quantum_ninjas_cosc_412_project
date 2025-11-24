@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // allow your Vite dev server to talk to the API
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"], credentials: true }));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || "dev-secret",
@@ -25,10 +25,22 @@ app.use(session({
 app.get("/health", (_, res) => res.json({ ok: true }));
 app.use("/auth", authRoutes);
 app.use("/transactions", txRoutes);
+app.use(session({
+  secret: process.env.SESSION_SECRET || "dev-secret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    httpOnly: true, 
+    sameSite: "lax",
+    secure: false, // Must be false for http://localhost
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    domain: undefined // Don't set domain for localhost
+  }
+}));
 
 (async () => {
   await mongoose.connect(process.env.MONGO_URL);
-  console.log("✅ Mongo connected");
+  console.log(" Mongo connected");
   const port = process.env.PORT || 3001;
-  app.listen(port, () => console.log(`✅ API running on :${port}`));
+  app.listen(port, () => console.log(` API running on :${port}`));
 })();

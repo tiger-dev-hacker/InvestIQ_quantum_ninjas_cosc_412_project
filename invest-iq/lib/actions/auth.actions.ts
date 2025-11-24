@@ -1,20 +1,10 @@
 'use server';
-
 import {auth} from "@/lib/better-auth/auth";
-import {inngest} from "@/lib/inngest/client";
+import { email } from "better-auth";
 import {headers} from "next/headers";
-
 export const signUpWithEmail = async ({ email, password, fullName, country, investmentGoals, riskTolerance, preferredIndustry }: SignUpFormData) => {
     try {
         const response = await auth.api.signUpEmail({ body: { email, password, name: fullName } })
-
-        if(response) {
-            await inngest.send({
-                name: 'app/user.created',
-                data: { email, name: fullName, country, investmentGoals, riskTolerance, preferredIndustry }
-            })
-        }
-
         return { success: true, data: response }
     } catch (e) {
         console.log('Sign up failed', e)
@@ -41,3 +31,47 @@ export const signOut = async () => {
         return { success: false, error: 'Sign out failed' }
     }
 }
+
+export const deleteUserProfile = async ({  password }: {password: string}) => {
+try {
+        await auth.api.deleteUser({ body: {password}, headers: await headers()});
+        return { success: true, message: 'User deleted successfully' }; // ADD THIS
+    } catch (e) {
+        console.log('Delete failed', e);
+        return { success: false, error: 'Delete failed' }; // Also fixed typo
+    }
+};
+
+export const updateUserProfile = async (data: {
+    name?: string;
+}) => {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers() // Import headers from 'next/headers'
+        });
+
+        if (!session) {
+            return {
+                success: false,
+                error: 'Not authenticated'
+            };
+        }
+
+        const result = await auth.api.updateUser({
+            body: data,
+            headers: await headers() // Pass the headers with session
+        });
+
+        return {
+            success: true,
+            data: result,
+            message: 'Profile updated successfully'
+        };
+    } catch (e) {
+        console.error('Error updating user profile:', e);
+        return {
+            success: false,
+            error: e instanceof Error ? e.message : 'An unexpected error occurred'
+        };
+    }
+};
