@@ -127,37 +127,44 @@ const handleConfirmUpdate = async () => {
                 </nav>
             </DropdownMenuContent>
         </DropdownMenu>
-        {showDeleteModal && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+       {showDeleteModal && (
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold text-gray-900 mb-4">
                 Delete Account
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-800 mb-4">
                 This action cannot be undone. Please enter your password to confirm.
             </p>
+
             <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-red-500"
+                className="w-full px-4 py-2 border border-gray-700 rounded-lg mb-4 
+                           text-gray-900 placeholder-gray-600
+                           focus:ring-2 focus:ring-red-500"
             />
+
             <div className="flex gap-3">
                 <button
                     onClick={handleConfirmDelete}
                     disabled={isDeleting}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:bg-gray-400"
+                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg 
+                               hover:bg-red-700 disabled:bg-gray-500"
                 >
                     {isDeleting ? 'Deleting...' : 'Delete Account'}
                 </button>
+
                 <button
                     onClick={() => {
                         setShowDeleteModal(false);
                         setPassword('');
                     }}
                     disabled={isDeleting}
-                    className="flex-1 border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50"
+                    className="flex-1 border border-gray-600 text-gray-800 py-2 px-4 
+                               rounded-lg hover:bg-gray-200 disabled:text-gray-400"
                 >
                     Cancel
                 </button>
@@ -165,31 +172,39 @@ const handleConfirmUpdate = async () => {
         </div>
     </div>
 )}
+
 {showUpdateModal && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-bold text-gray-900 mb-4">
                 Update Profile
             </h3>
+
             <input
                 type="text"
                 value={updateData.name}
-                onChange={(e) => setUpdateData({...updateData, name: e.target.value})}
+                onChange={(e) => setUpdateData({ ...updateData, name: e.target.value })}
                 placeholder="Name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-yellow-500"
+                className="w-full px-4 py-2 border border-gray-700 rounded-lg mb-4 
+                           text-gray-900 placeholder-gray-600
+                           focus:ring-2 focus:ring-yellow-500"
             />
+
             <div className="flex gap-3">
                 <button
                     onClick={handleConfirmUpdate}
                     disabled={isUpdating}
-                    className="flex-1 bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 disabled:bg-gray-400"
+                    className="flex-1 bg-yellow-500 text-white py-2 px-4 rounded-lg 
+                               hover:bg-yellow-600 disabled:bg-gray-500"
                 >
                     {isUpdating ? 'Updating...' : 'Update Profile'}
                 </button>
+
                 <button
                     onClick={() => setShowUpdateModal(false)}
                     disabled={isUpdating}
-                    className="flex-1 border border-gray-300 py-2 px-4 rounded-lg hover:bg-gray-50"
+                    className="flex-1 border border-gray-600 text-gray-800 py-2 px-4 
+                               rounded-lg hover:bg-gray-200 disabled:text-gray-400"
                 >
                     Cancel
                 </button>
@@ -197,6 +212,7 @@ const handleConfirmUpdate = async () => {
         </div>
     </div>
 )}
+
 </>
     )
 }
