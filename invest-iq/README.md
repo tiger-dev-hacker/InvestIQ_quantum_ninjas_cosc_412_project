@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Website link:- https://invest-iq-quantum-ninjas-cosc-412-p.vercel.app/sign-in
+Test account user:-
+-	Email: - test@test.com
+-	password: - password 	
 
-## Getting Started
+ 
+Test account user:-
+-	Email: - test@test.com
+-	password: - password 	
+You can also create your own account by clicking on create an account adding the details below:-
+ 
 
-First, run the development server:
+I.	Basic user profile operations and CRUD operations: -
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1.	Create – Sign up page with all the values:
+ 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2.	Read/Retrieve – Sign – in with registered email and password and retrieve the saved data
+ 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3.	Update – Update your name by clicking on the update button 
+a.	 Update your name by clicking on the update button
+ 
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+b.	Add updated name and click on the update profile button
+ 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+c.	The browser menu pop-up will display if the update went through. Click ok in the browser tab menu to let the update go through the system. 
+ 
 
-## Deploy on Vercel
+4.	Delete – user profile
+a.	To delete your user profile, click on the delete button in the user dropdown menu
+ 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+b.	The delete button will authenticate the user by prompting them to enter the password. Incorrect password will get an error message. Type your correct password again once you get this error message. 
+ 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+c.	Once the password is successful, the browser menu pop-up will display if the delete went through. Click ok in the browser tab menu to let the delete go through the system.
+ 
+
+  
+
+d.	Once the delete is successful, you will be navigated back to the sign-in page. 
+ 
+
+II.	Dashboard 
+•	Dashboard: Branded page after login with header/navigation menu with four different chart widgets and components
+ 
+ 
+
+
+•	Search a stock price and its data
+ 
+    
+
+•	Live market data and predictions with charts 
+                 
+               
+
+•	Prediction charts for different time ranges
+
+              
+
+
+           
+
+
+III.	Tailored investment generation with algorithmic strategies
+a.	Add/Remove stock to watchlist
+ 
+
+ 
+
+
+b.	Use equal weights-based calculator to generate profit/loss and risk score
+
+ 
+
+
+c.	Calculate tailored investment generation based on watchlist and predict future investment growth by applying basic quant strategies
+
+       
+
+
+        
+
+
+
+IV.	Transactions
+
+•	Transactions:
+a.	Add a valid transaction (e.g., “AAPL, buy, 1 @ 100”) → success message. 
+
+ 
+
+b.	Refresh the page → the new transaction appears in Recent Transactions (DB read verified). 
+
+ 
+
+
